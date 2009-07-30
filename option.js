@@ -19,7 +19,7 @@ Option.prototype.elements = function() {
 	return [this.get()];
 }
 
-/* For some reason, Some instanceof Option -> false */
+/* (new Some) instanceof Option -> false */
 function Some(val)
 {
     this.__value = val;
