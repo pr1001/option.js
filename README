@@ -1,0 +1,24 @@
+option.js is an attempt to duplicate the functionality of Scala's Option class in Javascript. This is a work in progress.
+
+Create a Some class based upon a value like so:
+	var opt = new Some("my option");
+	
+Get a value:
+	opt.get();						// -> "my option"
+	opt.getOrElse();				// -> "my option"
+	None.get();						// -> Error thrown
+	None.getOrElse("nothing here");	// -> "nothing here"
+
+Example usage:
+	function arrayPosition(arr, position) {
+		if (position >= 0 && position < arr.length) {
+			return new Some(arr[position]);
+		}
+		return None;
+	}
+	arrayValue([1, 2, 3, false, null], 2);	// -> Some("3")
+	arrayValue([1, 2, 3, false, null], 3);	// -> Some(false)
+	arrayValue([1, 2, 3, false, null], 4);	// -> Some(null)
+	arrayValue([1, 2, 3, false, null], 5);	// -> None
+
+For for details on available methods, see Scala's Option class definition at http://www.scala-lang.org/docu/files/api/scala/Option.html
