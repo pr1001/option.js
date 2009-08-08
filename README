@@ -21,4 +21,4 @@ Example usage:
 	arrayValueAtPosition([1, 2, 3, false, null], 4);	// -> Some(null)
 	arrayValueAtPosition([1, 2, 3, false, null], 5);	// -> None
 
-For for details on available methods, see Scala's Option class definition at http://www.scala-lang.org/docu/files/api/scala/Option.html
+For details on the methods available, see Scala's Option class definition at http://www.scala-lang.org/docu/files/api/scala/Option.html

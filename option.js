@@ -1,52 +1,55 @@
 function Option()
 {
-    this.__value = null;
-}
-Option.prototype.isEmpty = function() {
-	throw new Error();
-}
-Option.prototype.isDefined = function() {
-	throw new Error();
-}
-Option.prototype.get = function() {
-	throw new Error();
-}
-Option.prototype.getOrElse = function(alternative) {
-	throw new Error();
-}
-Option.prototype.elements = function() {
-	if (this.isEmpty) { return []; }
-	return [this.get()];
+  this.__value = null;
+  this.isEmpty = function() { throw new Error() }
+  this.isDefined = function() { return !this.isEmpty() }
+  this.get = function() { throw new Error() }
+  this.getOrElse = function(alternative) {
+    return (this.isEmpty() ? alternative : this.get())
+  }
+  this.elements = function() { throw new Error() }
+  this.foreach = function(f) {
+    if (!this.isEmpty()) { return f(this.get()) }
+  }
+  this.map = function(f) {
+    return (this.isEmpty() ? None : new Some(f(this.get())))
+  }
+  this.flatMap = function(f) {
+    return (this.isEmpty() ? None : f(this.get()))
+  }
+  this.filter = function(f) {
+    if (this.isEmpty() || f(this.get())) {
+      return this
+    }
+    else {
+      return None
+    }
+  }
+  this.toArray = function() { return this.elements() }
+  this.toString = function() { return "Option" }
 }
 
-/* (new Some) instanceof Option -> false */
-function Some(val)
-{
-    this.__value = val;
-    this.isEmpty = false;
-    this.isDefined = true;
+
+/* (new Some) instanceof Option -> true */
+function Some(val) {
+  // if you try to create a Some with no value, you're actually dealing with a None
+  if (typeof(val) == "undefined") { return None }
+  this.__value = val;
+  this.isEmpty = function() { return false }
+  this.get = function() { return this.__value }
+  this.elements = function() { return [this.get()] }
+  this.toString = function() { return "Some(" + this.get() + ")" }
 }
-Some.prototype = new Option;            // Hook up Option into Some's prototype chain
-Some.prototype.constructor = Some;
-Some.prototype.get = function() {
-    return this.__value;
-}
-Some.prototype.getOrElse = function(alternative) {
-	return this.get();
-}
+Some.prototype = new Option
+Some.prototype.constructor = Some
 
 /* None instanceof Option -> true */
-function None() {};
-None.prototype = new Option;
-None.prototype.constructor = None;
-None.prototype.isEmpty = true;
-None.prototype.isDefined = false;
-None.prototype.getOrElse = function(alternative) {
-	if (typeof(alternative) == "function") {
-		return alternative();
-	}
-	return alternative;
+function None() {
+  this.isEmpty = function() { return true }
+  this.elements = function() { return [] }
+  this.toString = function() { return "None" }
 }
+None.prototype = new Option
+None.prototype.constructor = None
 /* ugly way to have None inherit from Option but still be a singleton */
-var None = new None();
-
+var None = new None()
