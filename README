@@ -1,18 +1,45 @@
-option.js is an attempt to duplicate the functionality of Scala's Option class in Javascript. This is a work in progress.
+option.js is an attempt to duplicate the functionality of Scala's Option class in Javascript. Options are represented by either 
 
-Create a Some class based upon a value like so:
-	var opt = new Some("my option");
+Create a Some instance based upon a value like so:
+	var opt = Some("my option");
+
+Note that passing non-values to Some will lead to None being returned:
+  Some();           // -> None
+  Some(undefined);  // -> None
 	
 Get a value:
-	opt.get();						// -> "my option"
-	opt.getOrElse();				// -> "my option"
-	None.get();						// -> Error thrown
-	None.getOrElse("nothing here");	// -> "nothing here"
+	opt.get();						           // -> "my option"
+	opt.getOrElse();				         // -> "my option"
+	None.get();						           // -> Error thrown
+	None.getOrElse("nothing here");	 // -> "nothing here"
+	
+Get an Option's status:
+  opt.isEmpty();     // -> false
+  opt.isDefined();   // -> true
+  None.isEmpty();    // -> true
+  None.isDefined();  // -> false
+
+Treat the Option like a sequence:
+  opt.foreach(function(input) { alert(input) });                 // alert("my option") called
+  None.foreach(function(input) { alert(input) })                 // nothing called
+  opt.filter(function(input) { return input == "my option" });   // -> Some("my option")
+  opt.filter(function(input) { return input == "my option!" });  // -> None
+  None.filter(function(input) { return input == "my option" });  // -> None; anonymous function not called
+
+Transform the Option:
+  opt.map(function(input) { return input + "!" });       // -> Some("my option!")
+  None.map(function(input) { return input + "!" });      // -> None; anonymous function not called
+  opt.flatMap(function(input) { return input + "!" });   // -> "my option!"
+  None.flatMap(function(input) { return input + "!" });  // -> None; anonymous function not called
+
+Inheritance:
+  Some("my option") instanceof Some instanceof Option  // -> true
+  None instanceof Option                               // -> true
 
 Example usage:
 	function arrayValueAtPosition(arr, position) {
 		if (position >= 0 && position < arr.length) {
-			return new Some(arr[position]);
+			return Some(arr[position]);
 		}
 		return None;
 	}
